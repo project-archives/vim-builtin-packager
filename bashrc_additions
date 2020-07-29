@@ -1,0 +1,99 @@
+
+#####################################################################################
+#   Vim plugin manager
+#
+#   viminstallplugin        - install a vim plugin
+#   vimupdateplugins        - update plugins from git and process helptags
+#   vimlistplugins          - list vim plugins installed
+#   vimremoveplugin         - uninstall a vim plugin
+#   vimreinstallplugins     - reinstall plugins from script vimreinstallplugins.sh
+#   help_viminstallplugin   - internal help for viminstallplugin
+#
+#####################################################################################
+
+export DOTVIM=~/.vim
+export VIMPLUGINS=${DOTVIM}/pack/plugins/start 
+mkdir -p $VIMPLUGINS        # make if not exist silent otherwise
+help_viminstallplugin() {
+    echo "Usage:"
+    echo "       viminstallplugin    tpope/fugitive"
+    echo "       viminstallplugin    https://github.com/tpope/vim-fugitive"
+    echo "       viminstallplugin    -h | -? | --help "
+}
+
+viminstallplugin() {
+    MYARGS=$*
+    pushd $VIMPLUGINS  > /dev/null
+    export VIMGITHUB="https://github.com"
+
+    if [[ ! -f "vimreinstallplugins.sh" ]]; then
+        echo '#!/bin/bash' > vimreinstallplugins.sh
+        chmod +x vimreinstallplugins.sh
+    fi
+
+    if [[ "$MYARGS" =~ "-h" ]]; then
+        help_viminstallplugin
+    elif  [[ "$MYARGS" =~ "--help" ]]; then
+        help_viminstallplugin
+    elif  [[ "$MYARGS" =~ "-?" ]]; then
+        help_viminstallplugin
+    else  # install plugin
+        grabbase=`dirname \`dirname ${MYARGS}\``
+        case $grabbase in
+            "." )       # where MYARGS in format tpope/fugitive
+                    repo="${VIMGITHUB}/${MYARGS}"
+                    ;;
+            "${VIMGITHUB}" )       # where MYARGS in format https://github.com/tpope/fugitive
+                    repo="${MYARGS}"
+                    ;;
+            *)
+                    repo=""
+                    ;;
+        esac
+
+        # help 
+        if [[ "${repo}" != "" ]]; then
+            # clone repo to install vim plugin
+            git clone $repo                
+            echo "git clone ${repo}" >> vimreinstallplugins.sh
+        fi 
+    fi
+    popd > /dev/null
+}
+vimupdateplugins() {
+    pushd $VIMPLUGINS > /dev/null
+    for d in */ 
+    do
+        echo "Updating ${d}..."
+        pushd $d >/dev/null
+        git pull origin master
+        dir="`pwd`/doc"
+        doc="${dir}/doc"
+        if [[ -d $doc ]]; then 
+            echo "Updating helptags"
+            vim -c "helptags ${dir}<CR>" -c :q
+        fi
+        popd
+    done
+    popd > /dev/null
+}
+vimlistplugins() {
+    pushd $VIMPLUGINS > /dev/null
+    if [[ "$*" =~ "-n" ]]; then 
+        grep github.com/  vimreinstallplugins.sh | sed 's/^.*com\///' 
+    else
+        grep github.com/  vimreinstallplugins.sh | sed 's/^.*com\///' | xargs -n2   printf "%-40s%s"
+    fi
+
+    popd > /dev/null
+}
+vimremoveplugin() {
+    pluginname=$*
+    pushd $VIMPLUGINS > /dev/null
+    rm -rf $VIMPLUGINS/$pluginname
+    sed -i "/${pluginname}/d" $VIMPLUGINS/vimreinstallplugins.sh
+    popd > /dev/null
+}
+alias vimreinstallplugins=$VIMPLUGINS/vimreinstallplugins.sh
+#####################################################################################
+
