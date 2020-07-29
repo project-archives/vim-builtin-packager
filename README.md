@@ -1,6 +1,6 @@
 # Vim's Built In Package Manager
 
-For many of you you are very happy with your own choice of Vim Plugin manager
+For many of you you are very happy with your own choice of Vim plugin manager
 
 I've tried a few but ended up feeling like all the
 
@@ -10,15 +10,15 @@ in my .vimrc file just feels like clutter. But how can we do without these
 tools?
 
 Well we could right our own plugins to suit our needs - but why waste time
-reinventing the wheel when there are so many good pluginsout there.
+reinventing the wheel when there are so many good plugins out there.
 
 How could I manage the plugins then and still keep a tidy .vimrc
 
 
 ## Vim 8 built in package manager
 
-With Vim 8.0 we saw that Vim quitely added a built in package manager of sorts.
-It isn't the whizz-bang all featured plugin we have all seen and loved.
+With Vim 8.0 we saw that Vim quietly added a built in package manager of sorts.
+It isn't the fully featured plugin we have all seen and loved.
 
 It is little more than putting the plugin in a specific folder and adding the
 vimscript command **packloadall** to your .vimrc
@@ -26,7 +26,7 @@ vimscript command **packloadall** to your .vimrc
 Most plugin managers require some sort of vimscript bracketing in the .vimrc
 file letting the Plugin Manager know where to look. 
 
-Vim's builtin plugin manager doesn't do this it just expects that all
+Vim's built-in plugin manager doesn't do this it just expects that all
 auto-loaded plugins will be found in a specific directory, namely:
 
 > ~.vimrc/pack/plugins/start
@@ -37,9 +37,7 @@ repo into that directory (creating a subdirectory named after the plugin).
 Then you want to update your plugins and you've got a problem.
 
 Some like George Ornbo (https://shapeshed.com/vim-packages/) have found a
-solution using git submodules.Some like George Ornbo
-(https://shapeshed.com/vim-packages/) have found a solution using git
-submodules.
+solution using git submodules. 
 
 But that involves installing packages by typing in stuff like this:
 
@@ -67,10 +65,10 @@ rm -Rf .git/modules/vim/pack/shapeshed/start/vim-airline
 git commit
 ```
 
-And for me if something needs a git submodule then it is time for me to loko at
+And for me if something needs a git submodule then it is time for me to look at
 another solution.
 
-I soon realised that to manage the plugins using Vim's builtin package manager meant a lot of git clones, git pulls adn rm commands never mind the occasional :helptags ALL inside Vim.  
+I soon realised that to manage the plugins using Vim's built-in package manager meant a lot of git clones, git pulls and rm commands never mind the occasional :helptags ALL inside Vim.  
 
 This meant to get a meaningful package manager working from Vim's basic
 functions I would need several commands to install, list, update and remove
@@ -85,12 +83,35 @@ repo or something so I could install them quickly. Still not a simple solution.
 
 I then remembered Bash functions. For those of you not familiar with Bash
 functions - you can define them in any Bash shell script (even your .bashrc) and
-they appear to the user as a builtin comamnd of the shell or operating system. Although there 
+they appear to the user as a builtin command of the shell or operating system. Although there 
 isn't a binary or a shell script you can still auto complete using the tab key.
 
 
 ## Setting Up My Package Management System
 
+Setting up the builtin Vim plugin management is simple. This script has the
+following:
+
+```bash
+export DOTVIM=~/.vim
+export VIMPLUGINS=${DOTVIM}/pack/plugins/start
+mkdir -p $VIMPLUGINS        # make if not exist silent otherwise
+```
+
+The VIMPLUGINS variable is setup to point to the standard Vim plugin manager
+directory for autostarting plugins. 
+
+The script then runs a *mkdir -p* on that directory to ensure it exists
+
+the only other thing you need to do is add the following command to the top of
+your .vimrc file:
+
+```vim
+packloadall
+```
+
+This command autoloads everything inside your .vim/pack/plugins/start directory
+tree.
 
 
 ## Installing a Vim plugin
@@ -154,7 +175,7 @@ vimupdateplugins
 ```
 
 
-## Listing installed Vim ilugins 
+## Listing installed Vim plugins 
 
 To list the plugins you have installed simply run:
 
@@ -172,12 +193,12 @@ vimwiki/vimwiki
 
 The function lists all installed plugins (based on those listed in the
 vimreinstallplugins.sh script that is updated every time a plugin is installed
-ot removed.
+or removed.
 
 
 ## Removing installed Vim plugins
 
-Removing a plugin is simple. Yes you coudl go to the plugins directory (setup as
+Removing a plugin is simple. Yes you could go to the plugins directory (setup as
 $VIMPLUGINS in the bash script) and rm -rf the directory. But why change
 directory, just issue this command from anywhere:
 
@@ -190,19 +211,7 @@ removing the git clone command from the vimreinstallplugins.sh script to keep
 that in sync).
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Footnote
 
 (By the way thanks to Tim Pope for all all his plugins - they truely make my day
 better.)
