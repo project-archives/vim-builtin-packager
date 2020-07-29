@@ -103,7 +103,11 @@ directory for autostarting plugins.
 
 The script then runs a *mkdir -p* on that directory to ensure it exists
 
-the only other thing you need to do is add the following command to the top of
+You will either need to add this script into your .bashrc with a copy/paste or
+you could **source <path-to>/bashrc_additions** from within your .bashrc in
+order that the functions are setup.
+
+The only other thing you need to do is add the following command to the top of
 your .vimrc file:
 
 ```vim
