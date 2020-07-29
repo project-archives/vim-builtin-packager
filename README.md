@@ -129,19 +129,20 @@ Most of these do this by just running the command you use for installing a
 plugin and off it goes.
 
 I felt that this can be limiting in some situations and as I was writing these
-bash functions I decided that if I had a bash function 'vimupdateplugins' I
+bash functions I decided that if I had a bash function __vimupdateplugins__ I
 could update the plugins inside vim using: 
 
 ```vim
 :terminal
 ```
-Then typing 
+Then typing: 
 
 ```bash
 $ vimupdateplugins
 ```
 
-will systematically work it's way through each installed 
+will systematically work it's way through each installed plugin and run a **git
+pull** on each plugin directory updating the plugin frmo it's repo.
 
 NB if you want you can write a quick shell wrapper to be run as a cron job and
 you can wake up to a freshly updated set of plugins every day:
