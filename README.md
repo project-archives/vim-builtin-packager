@@ -105,7 +105,7 @@ The script then runs a *mkdir -p* on that directory to ensure it exists
 
 You will either need to add this script into your .bashrc with a copy/paste or
 you could **source ~/vim-builtin-packager/bashrc_additions** from within your .bashrc in
-order that the functions are setup (adjust path to wherever you saved the repo.
+order that the functions are setup (adjust path to wherever you saved the repo).
 
 The only other thing you need to do is add the following command to the top of
 your .vimrc file:
